@@ -1,0 +1,11 @@
+name: backenv
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - flask
+  - requests
+  - python-dotenv
+  - pymongo
+  - dnspython
+prefix: /home/mohit-d13/miniconda3/envs/backenv

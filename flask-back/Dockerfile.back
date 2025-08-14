@@ -1,0 +1,17 @@
+FROM continuumio/miniconda3:latest
+
+WORKDIR /flask-back
+
+RUN conda install -n base -c conda-forge mamba
+
+COPY environment.yml .
+
+RUN mamba env create -f environment.yml -n backenv
+
+SHELL [ "conda", "run", "-n", "backenv", "/bin/bash", "-c" ]
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["conda", "run", "--no-capture-output", "-n", "backenv", "python3", "app.py"]
