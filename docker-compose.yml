@@ -7,7 +7,11 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - flask-back/backend.env
+      - flask-back/.env.backend
+    develop:
+      watch:
+        - action: rebuild
+          path: ./flask-back
     networks:
       - app_network
 
@@ -19,7 +23,13 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - express-front/frontend.env
+      - express-front/.env.frontend
+    develop:
+      watch:
+        - action: rebuild
+          path: ./express-front
+    depends_on:
+      - backend
     networks:
       - app_network
 
