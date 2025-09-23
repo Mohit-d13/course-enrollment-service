@@ -14,8 +14,36 @@ spec:
       labels:
         app: backend
     spec:
-      container:
+      containers:
       - name: backend
-        image: mohitd13/course-enrollment-service:backend
+        image: mohitd13/course-enrollment-service:new-backend
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: MONGODB_URI
         ports:
         - containerPort: 5000
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secrets
+type: Opaque
+data:
+  MONGODB_URI: bW9uZ29kYitzcnY6Ly9tb2hpdC1kMTM6T05xZ1BzQjlUTVFIREw2TkBjbHVzdGVyMC5ncHFkNWk0Lm1vbmdvZGIubmV0Lz9yZXRyeVdyaXRlcz10cnVlJnc9bWFqb3JpdHkmYXBwTmFtZT1DbHVzdGVyMA==
+
+
+
