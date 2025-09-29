@@ -5,19 +5,25 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 load_dotenv()
-mongodb_uri = os.getenv("MONGODB_URI")
+mongo_initdb_root_user = os.getenv("MONGO_INITDB_ROOT_USER")
+mongo_initdb_root_password = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+mongo_server = os.getenv("MONGO_SERVER")
 
-try:
-    client = MongoClient(mongodb_uri, ServerSelectionTimeoutMS=5000)
-    client.admin.command('ping')
-    print("MongoDB connection successfull")
-except ConnectionFailure as e:
-    print(f"Failed to connect to mongodb cluster: {e}")
+mongo_uri = f"mongodb://{mongo_initdb_root_user}:{mongo_initdb_root_password}@{mongo_server}:27017/"
 
-db = client["flask_mongodb"]
-form_collection = db["course"]
+client = MongoClient(mongo_uri, ServerSelectionTimeoutMS=5000)
+db = client["studies_db"]
+form_collection = db["courses"]
 
 app = Flask(__name__)
+
+@app.route("/")
+def root():
+    try:
+        client.admin.command('ping')
+        return "MongoDB connection successfull"
+    except ConnectionFailure as e:
+        return f"Failed to connect to mongodb database: {e}", 500
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -31,4 +37,4 @@ def submit():
     return jsonify({"error": "No data received"}), 400
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)

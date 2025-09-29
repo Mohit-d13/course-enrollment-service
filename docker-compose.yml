@@ -1,8 +1,22 @@
 services:
+
+  main_db:
+    container_name: main_db
+    image: mongo:noble
+    restart: always
+    env_file:
+      - .env.mongo
+    ports:
+     - "27017:27017"
+    volumes:
+      - mgdata:/data/db
+    networks:
+      - app_network
+
   backend:
     build: 
       context: ./flask-back
-      dockerfile: Dockerfile.back
+      dockerfile: back.Dockerfile
     container_name: backend
     ports:
       - "5000:5000"
@@ -12,13 +26,15 @@ services:
       watch:
         - action: rebuild
           path: ./flask-back
+    depends_on:
+      - main_db
     networks:
       - app_network
-
+  
   frontend:
     build: 
       context: ./express-front
-      dockerfile: Dockerfile.front
+      dockerfile: front.Dockerfile
     container_name: frontend
     ports:
       - "3000:3000"
@@ -33,6 +49,8 @@ services:
     networks:
       - app_network
 
+volumes:
+  mgdata:
 networks:
   app_network:
     driver: bridge
