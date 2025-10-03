@@ -5,11 +5,11 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 load_dotenv()
-mongo_initdb_root_user = os.getenv("MONGO_INITDB_ROOT_USER")
+mongo_initdb_root_username = os.getenv("MONGO_INITDB_ROOT_USERNAME")
 mongo_initdb_root_password = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
 mongo_server = os.getenv("MONGO_SERVER")
 
-mongo_uri = f"mongodb://{mongo_initdb_root_user}:{mongo_initdb_root_password}@{mongo_server}:27017/"
+mongo_uri = f"mongodb://{mongo_initdb_root_username}:{mongo_initdb_root_password}@{mongo_server}:27017/"
 
 client = MongoClient(mongo_uri, ServerSelectionTimeoutMS=5000)
 db = client["studies_db"]

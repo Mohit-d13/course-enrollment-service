@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  labels:
+    app: main-db
+spec:
+  selector:
+    matchLabels:
+      app: main-db
+  template:
+    metadata:
+      labels:
+        app: main-db
+    spec:
+      containers:
+        - name: main-db
+          image: docker.io/mongo
+          ports:
+            - containerPort: 27017
+          envFrom:
+          - secretRef:
+              name: mongo-secrets
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-entrypoint
+spec:
+  selector:
+    app: main-db
+  ports: 
+    - port: 27017
+      targetPort: 27017 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secrets 
+type: Opaque
+data:
+  MONGO_INITDB_ROOT_USERNAME: cm9vdA==                    #  base 64 encoded
+  MONGO_INITDB_ROOT_PASSWORD: ZWU3NWM1YzIyODQwOTg4OQ==
+
+
+        

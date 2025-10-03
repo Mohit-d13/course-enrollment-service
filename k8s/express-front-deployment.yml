@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: mohitd13/course-enrollment-service:new-frontend
+        image: docker.io/mohitd13/course-enrollment-service:new-frontend
         envFrom:
           - configMapRef:
               name: frontend-config
