@@ -1,7 +1,8 @@
-.env.backend
+# python cache
+__pycache__/
 
-__pycache__
-
+# docker ignore file
 .dockerignore
 
+# virtual environment
 flaskenv/

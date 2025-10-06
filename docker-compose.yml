@@ -1,11 +1,11 @@
 services:
 
-  main_db:
-    container_name: main_db
+  main-db:
+    container_name: main-db
     image: mongo:noble
     restart: always
     env_file:
-      - .env.mongo
+      - .env.backend
     ports:
      - "27017:27017"
     volumes:
@@ -21,13 +21,13 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - flask-back/.env.backend
+      - .env.backend
     develop:
       watch:
         - action: rebuild
           path: ./flask-back
     depends_on:
-      - main_db
+      - main-db
     networks:
       - app_network
   
@@ -39,7 +39,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - express-front/.env.frontend
+      - .env.frontend
     develop:
       watch:
         - action: rebuild
